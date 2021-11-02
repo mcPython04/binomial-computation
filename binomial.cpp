@@ -2,6 +2,9 @@
 # include <time.h>
 # include <chrono>
 
+#define M 3
+#define N 2
+
 using namespace std::chrono;
 using std::cout;
 using std::endl;
@@ -9,19 +12,25 @@ using std::cin;
 
 int divide_conquer_binomial(int n, int k);
 int dynamic_binomial(int n, int k);
+int binomial(int n, int k);
+int memo_binomial(int n, int k, int **arr);
 double time_divide_conquer(int n, int k);
 double time_dynamic(int n, int k);
+double time_memo(int n, int k);
 
 
 int main() {
 	
 	// output result and time for divide/conquer approach of binomial coefficient
-	double s = time_divide_conquer(52, 5);	
-	cout << "time for divide/conquer: " << s  << " nanoseconds" << endl;
+	double time = time_divide_conquer(52, 5);	
+	cout << "time for divide/conquer: " << time  << " nanoseconds" << endl;
 	
 	// output result and time for dynamic programming approach of binomial coefficienet
-	int result = time_dynamic(52, 5);
-	cout << "time for dynamic: " << result << endl;
+	double time1 = time_dynamic(52, 5);
+	cout << "time for dynamic: " << time1 << endl;
+	
+	int result = binomial(3, 2);
+	cout << result << endl;
 	
 	return 0;
 }
@@ -61,6 +70,44 @@ int dynamic_binomial(int n, int k) {
 	
 	// return binomial coefficient result
 	return arr[n][k];	
+}
+
+
+int memo_binomial(int n, int k, int **arr){
+	
+	if (arr[n][k] == -1) {
+		arr[n][k] = memo_binomial(n-1, k, arr) + memo_binomial(n-1, k-1,  arr);
+	}
+	
+	return arr[n][k];
+}
+
+
+int binomial(int n, int k) {
+	int **arr;
+	arr = new int *[n];
+	
+	for (int i = 0; i <= n; i++) {
+		arr[i] = new int[k];
+	}
+	
+	
+	// filling out table with base case
+	for (int i = 0; i <= n; i++){
+		for (int j = 0; j <= k; j++) {
+		
+			if (j == 0 || j == i) {
+				arr[i][j] = 1;
+			}
+			
+			else {
+				arr[i][j] = -1;
+			}
+		}
+	}
+	
+	
+	return memo_binomial(n, k, arr);
 }
 
 
