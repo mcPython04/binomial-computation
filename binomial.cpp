@@ -8,8 +8,9 @@ using std::endl;
 using std::cin;
 
 int divide_conquer_binomial(int n, int k);
-int divide_conquer_dynamic(int n, int k);
+int dynamic_binomial(int n, int k);
 double time_divide_conquer(int n, int k);
+double time_dynamic(int n, int k);
 
 
 int main() {
@@ -19,8 +20,8 @@ int main() {
 	cout << "time for divide/conquer: " << s  << " nanoseconds" << endl;
 	
 	// output result and time for dynamic programming approach of binomial coefficienet
-	int result = divide_conquer_dynamic(52, 5);
-	cout << "result dynamic: " << result << endl;
+	int result = time_dynamic(52, 5);
+	cout << "time for dynamic: " << result << endl;
 	
 	return 0;
 }
@@ -35,7 +36,7 @@ int divide_conquer_binomial(int n, int k) {
 
 
 // dynamic programming approach of binomial coefficient
-int divide_conquer_dynamic(int n, int k) {
+int dynamic_binomial(int n, int k) {
 
 	// create 2D table
 	int arr[n+1][k+1];
@@ -69,7 +70,23 @@ double time_divide_conquer(int n, int k) {
 	auto start = high_resolution_clock::now();
 	
 	int result = divide_conquer_binomial(n, k);
-	cout << "result: " << result << endl;
+	cout << "result (divide/conquer): " << result << endl;
+	
+	auto end = high_resolution_clock::now();
+	auto duration = duration_cast<nanoseconds>(end - start);
+	
+	double s = duration.count();
+	
+	return s;
+}
+
+
+// timing dynamic approach
+double time_dynamic(int n, int k) {
+	auto start = high_resolution_clock::now();
+	
+	int result = dynamic_binomial(n, k);
+	cout << "result (dynamic): " << result << endl;
 	
 	auto end = high_resolution_clock::now();
 	auto duration = duration_cast<nanoseconds>(end - start);
