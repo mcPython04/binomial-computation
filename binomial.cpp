@@ -1,6 +1,7 @@
 # include <iostream>
 # include <time.h>
 # include <chrono>
+# include <cstring>
 
 #define M 3
 #define N 2
@@ -21,16 +22,17 @@ double time_memo(int n, int k);
 
 int main() {
 	
-	// output result and time for divide/conquer approach of binomial coefficient
-	double time = time_divide_conquer(52, 5);	
+	// output result and time for divide/conquer approach of binomial coefficient computation
+	double time = time_divide_conquer(52, 3);	
 	cout << "time for divide/conquer: " << time  << " nanoseconds" << endl;
 	
-	// output result and time for dynamic programming approach of binomial coefficienet
-	double time1 = time_dynamic(52, 5);
-	cout << "time for dynamic: " << time1 << endl;
+	// output result and time for dynamic programming approach of binomial coefficient computation
+	double time1 = time_dynamic(52, 3);
+	cout << "time for dynamic: " << time1 << " nanoseconds" << endl;
 	
-	int result = binomial(3, 2);
-	cout << result << endl;
+	// output result and time for memoization approach of binomial coefficient computation
+	int time2 = time_memo(52, 3);
+	cout << "time for memo: " << time2 << " nanoseconds" << endl;
 	
 	return 0;
 }
@@ -73,6 +75,7 @@ int dynamic_binomial(int n, int k) {
 }
 
 
+// memoization of binomial
 int memo_binomial(int n, int k, int **arr){
 	
 	if (arr[n][k] == -1) {
@@ -83,20 +86,22 @@ int memo_binomial(int n, int k, int **arr){
 }
 
 
+// function that allocates 2d array and calls for the memoization function
 int binomial(int n, int k) {
+
+	// allocating 2d array
 	int **arr;
 	arr = new int *[n];
 	
 	for (int i = 0; i <= n; i++) {
-		arr[i] = new int[k];
+		arr[i] = new int [k];
 	}
 	
 	
-	// filling out table with base case
+	// filling out base case for table (2d array)
 	for (int i = 0; i <= n; i++){
 		for (int j = 0; j <= k; j++) {
-		
-			if (j == 0 || j == i) {
+			if (j == 0 || i == j) {
 				arr[i][j] = 1;
 			}
 			
@@ -134,6 +139,22 @@ double time_dynamic(int n, int k) {
 	
 	int result = dynamic_binomial(n, k);
 	cout << "result (dynamic): " << result << endl;
+	
+	auto end = high_resolution_clock::now();
+	auto duration = duration_cast<nanoseconds>(end - start);
+	
+	double s = duration.count();
+	
+	return s;
+}
+
+
+// timing memoization approach
+double time_memo(int n, int k) {
+	auto start = high_resolution_clock::now();
+	
+	int result = binomial(n, k);
+	cout << "result (memo): " << result << endl;
 	
 	auto end = high_resolution_clock::now();
 	auto duration = duration_cast<nanoseconds>(end - start);
